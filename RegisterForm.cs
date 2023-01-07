@@ -22,6 +22,8 @@ namespace login_register_form
         public RegisterForm()
         {
             InitializeComponent();
+            this.MinimizeBox = false;
+            this.ControlBox = false;
 
         }
         SqlConnection connect = new SqlConnection(@"Data Source=LAYOUT-PC;Initial Catalog=mydata;Integrated Security=True");
@@ -67,6 +69,10 @@ namespace login_register_form
                 MessageBox.Show("ALL FIELDS MUST BE FILL");
             } else if (txtPassword.Text == txtCompPass.Text)
             {
+                txtUsername.Text = "";
+                txtPassword.Text = "";
+                txtCompPass.Text = "";
+
                 try
                 {
                     string querry = "INSERT into tbl_users (username,password) VALUES ('" + txtUsername.Text + "', '" + txtPassword.Text + "')";
