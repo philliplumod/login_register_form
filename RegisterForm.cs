@@ -11,9 +11,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-
-
-
 namespace login_register_form
 {
     public partial class RegisterForm : Form
@@ -24,15 +21,9 @@ namespace login_register_form
             InitializeComponent();
             this.MinimizeBox = false;
             this.ControlBox = false;
-
         }
+
         SqlConnection connect = new SqlConnection(@"Data Source=LAYOUT-PC;Initial Catalog=mydata;Integrated Security=True");
-
-
-
-
-
-
         private void lblLogin_Click(object sender, EventArgs e)
         {
             new LoginForm().Show();
@@ -63,15 +54,14 @@ namespace login_register_form
 
         private void btnCreateAccount_Click_1(object sender, EventArgs e)
         {
+           
 
             if (string.IsNullOrEmpty(txtUsername.Text) || string.IsNullOrEmpty(txtPassword.Text) || string.IsNullOrEmpty(txtCompPass.Text))
             {
                 MessageBox.Show("ALL FIELDS MUST BE FILL");
             } else if (txtPassword.Text == txtCompPass.Text)
             {
-                txtUsername.Text = "";
-                txtPassword.Text = "";
-                txtCompPass.Text = "";
+             
 
                 try
                 {
@@ -90,6 +80,9 @@ namespace login_register_form
                 finally
                 {
                     connect.Close();
+                    txtUsername.Text = "";
+                    txtPassword.Text = "";
+                    txtCompPass.Text = "";
                 }
             }
             else
@@ -98,14 +91,13 @@ namespace login_register_form
             }
         }
 
-        private void label5_Click(object sender, EventArgs e)
+        private void pictureBox1_Click(object sender, EventArgs e)
         {
-
-        }
-
-        private void txtPassword_TextChanged(object sender, EventArgs e)
-        {
-
+            DialogResult result = MessageBox.Show("Are you sure you want to close the form?", "Confirm", MessageBoxButtons.YesNo);
+            if (result == DialogResult.Yes)
+            {
+                this.Close();
+            }
         }
     }
     }

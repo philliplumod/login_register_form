@@ -16,13 +16,15 @@ namespace login_register_form
     public partial class LoginForm : Form
     {
 
+
+        
         public LoginForm()
         {
             InitializeComponent();
             this.MinimizeBox = false;
             this.ControlBox = false;
-
-
+            this.MaximizeBox = false;
+ 
         }
 
         SqlConnection connect = new SqlConnection(@"Data Source=LAYOUT-PC;Initial Catalog=mydata;Integrated Security=True");
@@ -34,38 +36,56 @@ namespace login_register_form
             username = txtUsername.Text;
             userpassword = txtPassword.Text;
 
-            try
+            string querry = "SELECT * FROM tbl_users WHERE username = '" + txtUsername.Text + "' AND password = '" + txtPassword.Text + "'";
+            SqlDataAdapter adapter = new SqlDataAdapter(querry, connect);
+            connect.Open();
+            DataTable table = new DataTable();
+            adapter.Fill(table);
+
+            if (table.Rows.Count > 0)
             {
-                string querry = "SELECT * FROM tbl_users WHERE username = '"+txtUsername.Text+"' AND password = '"+txtPassword.Text+"'";
-                SqlDataAdapter adapter = new SqlDataAdapter(querry, connect);
-                connect.Open();
-                DataTable table = new DataTable();
-                adapter.Fill(table);
-
-                if (table.Rows.Count > 0 )
-                {
-                    username = txtUsername.Text;
-                    userpassword = txtPassword.Text;
-
-                    LandingPage landform = new LandingPage();
-                    landform.Show();
-                    this.Hide();
-                } else
-                {
-                    MessageBox.Show("INVALID DETAILS");
-                   txtUsername.Clear();
-                    txtPassword.Clear();
-                    txtUsername.Focus();
-                }
-
-
-            }catch {
-                MessageBox.Show("ERRORR");
-            } finally   {
-                connect.Close();
+                username = txtUsername.Text;
+                userpassword = txtPassword.Text;
+                LandingPage landform = new LandingPage(username);
+                landform.Show();
+                this.Hide();
             }
-
+            else
+            {
+                if (string.IsNullOrEmpty(txtUsername.Text))
+                {
+                    MessageBox.Show("Please enter a username.");
+                }
+                else if (string.IsNullOrEmpty(txtPassword.Text))
+                {
+                    MessageBox.Show("Please enter a password.");
+                }
+                else
+                {
+                    string querry2 = "SELECT * FROM tbl_users WHERE username = '" + txtUsername.Text + "'";
+                    SqlDataAdapter adapter2 = new SqlDataAdapter(querry2, connect);
+                    DataTable table2 = new DataTable();
+                    adapter2.Fill(table2);
+                    if (table2.Rows.Count > 0)
+                    {
+                        MessageBox.Show("Incorrect password, please try again.");
+                        txtPassword.Clear();
+                        txtPassword.Focus();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Invalid username or password, please try again.");
+                        txtUsername.Clear();
+                        txtPassword.Clear();
+                        txtUsername.Focus();
+                    }
+                }
+            }
+            connect.Close();
         }
+
+
+
 
         private void lblRegister_Click(object sender, EventArgs e)
         {
@@ -100,5 +120,7 @@ namespace login_register_form
                 this.Close();
             }
         }
+
+
     }
 }
