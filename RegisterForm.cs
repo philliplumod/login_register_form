@@ -54,42 +54,46 @@ namespace login_register_form
 
         private void btnCreateAccount_Click_1(object sender, EventArgs e)
         {
-           
-
             if (string.IsNullOrEmpty(txtUsername.Text) || string.IsNullOrEmpty(txtPassword.Text) || string.IsNullOrEmpty(txtCompPass.Text))
             {
                 MessageBox.Show("ALL FIELDS MUST BE FILL");
-            } else if (txtPassword.Text == txtCompPass.Text)
+            }
+            else
             {
-             
-
-                try
+                if (txtPassword.Text == txtCompPass.Text)
                 {
+                    bool success = false;
+
                     string querry = "INSERT into tbl_users (username,password) VALUES ('" + txtUsername.Text + "', '" + txtPassword.Text + "')";
                     SqlDataAdapter adapater = new SqlDataAdapter(querry, connect);
                     connect.Open();
 
-                    adapater.SelectCommand.ExecuteNonQuery();
-                    MessageBox.Show("DATA SAVED");
+                    if (adapater.SelectCommand.ExecuteNonQuery() > 0)
+                    {
+                        success = true;
+                    }
 
-                }
-                catch
-                {
-                    MessageBox.Show("ERROR");
-                }
-                finally
-                {
+                    if (success)
+                    {
+                        MessageBox.Show("DATA SAVED");
+                    }
+                    else
+                    {
+                        MessageBox.Show("ERROR");
+                    }
+
                     connect.Close();
                     txtUsername.Text = "";
                     txtPassword.Text = "";
                     txtCompPass.Text = "";
                 }
-            }
-            else
-            {
-                MessageBox.Show("Password does not match");
+                else
+                {
+                    MessageBox.Show("Password does not match");
+                }
             }
         }
+
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {
